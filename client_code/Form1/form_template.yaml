@@ -27,23 +27,34 @@ components:
     name: file_loader_1
     properties: {file_types: .xlsx, role: tonal-button, text: Upload}
     type: FileLoader
-  - name: select_dma_label
-    properties: {bold: false, text: Select DMAs}
-    type: Label
-  - layout_properties: {}
-    name: plot_1
-    properties: {height: '600'}
-    type: Plot
+  - components:
+    - components:
+      - components: []
+        layout_properties: {grid_position: 'CUHMPV,HMPXQK'}
+        name: dma_checkbox_panel
+        properties: {}
+        type: ColumnPanel
+      layout_properties: {width: 116}
+      name: column_panel_1
+      properties: {}
+      type: ColumnPanel
+    - components:
+      - layout_properties: {grid_position: 'VKEADN,WYZFJJ'}
+        name: plot_1
+        properties: {height: '600'}
+        type: Plot
+      layout_properties: {}
+      name: column_panel_2
+      properties: {}
+      type: ColumnPanel
+    name: flow_panel_1
+    properties: {}
+    type: FlowPanel
   layout_properties: {slot: default}
   name: linear_panel_1
   properties: {}
   type: LinearPanel
-- components:
-  - components: []
-    layout_properties: {grid_position: 'KEHTTW,IGLPSO'}
-    name: dma_checkbox_panel
-    properties: {}
-    type: ColumnPanel
+- components: []
   layout_properties: {slot: left-nav}
   name: dma_checkbox_panel_copy
   properties: {}
