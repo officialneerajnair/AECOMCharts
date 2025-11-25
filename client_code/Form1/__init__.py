@@ -46,26 +46,49 @@ class Form1(Form1Template):
   def plot_chart(self, traces):
     # Define Layout for Dual Axis
     layout = {
-      'title': f'Pressure & Flow for {self.dma_dropdown.selected_value}',
-      'xaxis': {'title': 'Date & Time'},
-
-      # Left Y Axis (Pressure)
-      'yaxis': {
-        'title': 'Pressure',
-        'titlefont': {'color': '#1f77b4'},
-        'tickfont': {'color': '#1f77b4'}
+      # 1. CHART TITLE
+      'title': {
+        'text': 'Total Head Graph',
+        'font': {'size': 24, 'family': 'Arial', 'color': '#333'}
       },
 
-      # Right Y Axis (Flow)
+      # 2. UNIFIED TOOLTIP (Shows all values for the specific time)
+      'hovermode': 'x unified',
+
+      # 3. X-AXIS CONFIGURATION
+      'xaxis': {
+        'title': 'Date & Time',
+        'type': 'date',
+        'tickformat': '%d/%m %H:%M',
+        'automargin': True
+      },
+
+      # 4. LEFT Y-AXIS (Pressure / Total Head)
+      'yaxis': {
+        'title': 'Total Head',
+        'titlefont': {'color': '#1f77b4', 'size': 14},
+        'tickfont': {'color': '#1f77b4'},
+        'showgrid': True
+      },
+
+      # 5. RIGHT Y-AXIS (Flow Rate)
       'yaxis2': {
         'title': 'Flow Rate',
-        'titlefont': {'color': '#ff7f0e'},
+        'titlefont': {'color': '#ff7f0e', 'size': 14},
         'tickfont': {'color': '#ff7f0e'},
         'overlaying': 'y', 
-        'side': 'right'
+        'side': 'right',
+        'showgrid': False
       },
-      'legend': {'x': 1.1, 'y': 1}, 
-      'height': 600
+
+      # Legend and Margins
+      'legend': {
+        'x': 1.1, 
+        'y': 1,
+        'bgcolor': 'rgba(255,255,255,0.5)'
+      },
+      'height': 600,
+      'margin': {'l': 60, 'r': 80, 't': 80, 'b': 60}
     }
 
     # Render the plot

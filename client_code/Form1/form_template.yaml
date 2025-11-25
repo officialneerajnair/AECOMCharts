@@ -14,7 +14,12 @@ components:
   properties: {col_widths: '{}'}
   type: ColumnPanel
 - components:
-  - name: outlined_card_1
+  - components:
+    - layout_properties: {grid_position: 'GECNHT,SGGFZI'}
+      name: rich_text_1
+      properties: {content: Pressure & Flow Plots, font: Helvetica, font_size: 37}
+      type: RichText
+    name: outlined_card_1
     properties: {role: outlined-card}
     type: ColumnPanel
   - layout_properties: {}
