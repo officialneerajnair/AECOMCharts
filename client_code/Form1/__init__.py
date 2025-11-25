@@ -1,96 +1,98 @@
 from ._anvil_designer import Form1Template
 from anvil import *
-import anvil.tables as tables
-import anvil.tables.query as q
-from anvil.tables import app_tables
 import anvil.server
 import plotly.graph_objects as go
 
 class Form1(Form1Template):
   def __init__(self, **properties):
-    # Set Form properties and Data Bindings.
     self.init_components(**properties)
-
-    # Disable dropdown until file is loaded
-    self.dma_dropdown.enabled = False
+    self.master_data = {} # Stores the full dataset in browser memory
 
   def file_loader_1_change(self, file, **event_args):
-    """This method is called when a file is loaded"""
+    """Called when file is uploaded"""
     if file:
-      Notification("Processing Excel File...").show()
+      Notification("Processing File... Please wait.", timeout=None).show()
 
-      # Call server to parse file and get DMA list
-      dma_list = anvil.server.call('load_excel_file', file)
+      # 1. Get ALL data at once (Dictionary: {'DMA': [traces]})
+      self.master_data = anvil.server.call('process_excel_file', file)
 
-      # Populate dropdown
-      self.dma_dropdown.items = dma_list
-      self.dma_dropdown.enabled = True
+      # 2. Create Checkboxes
+      self.create_dma_checkboxes()
 
-      Notification("File Loaded! Select a DMA.").show()
+      # 3. Setup the blank plot layout
+      self.update_plot([]) 
 
-  def dma_dropdown_change(self, **event_args):
-    """This method is called when an item is selected"""
-    selected_dma = self.dma_dropdown.selected_value
-    print(f"User selected: {selected_dma}") 
+      Notification("Data Ready! Select DMAs below.").show()
 
-    if selected_dma:
-      # Get trace data from server
-      traces_data = anvil.server.call('get_plot_data', selected_dma)
-      print(f"Server returned {len(traces_data) if traces_data else 'None'} traces")
+  def create_dma_checkboxes(self):
+    """Generates a checkbox for each DMA found in the file"""
+    self.dma_checkbox_panel.clear() # Clear old boxes
 
-      if traces_data:
-        self.plot_chart(traces_data)
-      else:
-        Notification("No data found for this DMA").show()
+    # Sort keys alphabetically
+    sorted_dmas = sorted(self.master_data.keys())
 
-  def plot_chart(self, traces):
-    # Define Layout for Dual Axis
+    for dma in sorted_dmas:
+      # Create a new CheckBox component
+      c = CheckBox(text=dma, checked=False)
+
+      # Bind the 'change' event to our update function
+      c.set_event_handler('change', self.on_checkbox_change)
+
+      # Add to the visual panel
+      self.dma_checkbox_panel.add_component(c)
+
+  def on_checkbox_change(self, **event_args):
+    """Runs instantly in the browser when any box is checked"""
+    combined_traces = []
+
+    # 1. Loop through all checkboxes in the panel
+    for comp in self.dma_checkbox_panel.get_components():
+      if isinstance(comp, CheckBox) and comp.checked:
+        dma_name = comp.text
+        # 2. Grab the pre-loaded data from memory
+        traces = self.master_data.get(dma_name, [])
+        combined_traces.extend(traces)
+
+    # 3. Update plot
+    self.update_plot(combined_traces)
+
+  def update_plot(self, traces):
+    # If no traces, set a blank list
+    if not traces:
+      self.plot_1.data = []
+      return
+
+    # Define Layout
     layout = {
-      # 1. CHART TITLE
       'title': {
         'text': 'Total Head Graph',
         'font': {'size': 24, 'family': 'Arial', 'color': '#333'}
       },
-
-      # 2. UNIFIED TOOLTIP (Shows all values for the specific time)
       'hovermode': 'x unified',
-
-      # 3. X-AXIS CONFIGURATION
       'xaxis': {
         'title': 'Date & Time',
         'type': 'date',
         'tickformat': '%d/%m %H:%M',
         'automargin': True
       },
-
-      # 4. LEFT Y-AXIS (Pressure / Total Head)
       'yaxis': {
         'title': 'Total Head',
-        'titlefont': {'color': '#1f77b4', 'size': 14},
+        'titlefont': {'color': '#1f77b4'},
         'tickfont': {'color': '#1f77b4'},
         'showgrid': True
       },
-
-      # 5. RIGHT Y-AXIS (Flow Rate)
       'yaxis2': {
         'title': 'Flow Rate',
-        'titlefont': {'color': '#ff7f0e', 'size': 14},
+        'titlefont': {'color': '#ff7f0e'},
         'tickfont': {'color': '#ff7f0e'},
         'overlaying': 'y', 
         'side': 'right',
         'showgrid': False
       },
-
-      # Legend and Margins
-      'legend': {
-        'x': 1.1, 
-        'y': 1,
-        'bgcolor': 'rgba(255,255,255,0.5)'
-      },
+      'legend': {'x': 1.1, 'y': 1},
       'height': 600,
       'margin': {'l': 60, 'r': 80, 't': 80, 'b': 60}
     }
 
-    # Render the plot
     self.plot_1.data = traces
     self.plot_1.layout = layout

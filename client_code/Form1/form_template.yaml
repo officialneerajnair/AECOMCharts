@@ -8,35 +8,28 @@ components:
   name: navbar_links
   properties: {}
   type: FlowPanel
-- components: []
+- components:
+  - layout_properties: {grid_position: 'FXBSUH,FUWQQY'}
+    name: rich_text_1
+    properties: {content: Double Plot App, font: Helvetica, font_size: 38, format: restricted_html}
+    type: RichText
   layout_properties: {slot: title}
   name: content_panel
   properties: {col_widths: '{}'}
   type: ColumnPanel
 - components:
-  - components:
-    - layout_properties: {grid_position: 'GECNHT,SGGFZI'}
-      name: rich_text_1
-      properties: {content: Pressure & Flow Plots, font: Helvetica, font_size: 37}
-      type: RichText
-    name: outlined_card_1
-    properties: {role: outlined-card}
-    type: ColumnPanel
   - layout_properties: {}
     name: upload_label
-    properties: {text: Upload Your Excel File}
+    properties: {bold: false, text: Upload Your Excel File}
     type: Label
   - data_bindings: []
     event_bindings: {change: file_loader_1_change}
-    layout_properties: {}
     name: file_loader_1
     properties: {file_types: .xlsx, role: tonal-button, text: Upload}
     type: FileLoader
-  - event_bindings: {change: dma_dropdown_change}
-    layout_properties: {}
-    name: dma_dropdown
-    properties: {include_placeholder: true, placeholder: Select a DMA}
-    type: DropDown
+  - name: select_dma_label
+    properties: {bold: false, text: Select DMAs}
+    type: Label
   - layout_properties: {}
     name: plot_1
     properties: {height: '600'}
@@ -45,6 +38,16 @@ components:
   name: linear_panel_1
   properties: {}
   type: LinearPanel
+- components:
+  - components: []
+    layout_properties: {grid_position: 'KEHTTW,IGLPSO'}
+    name: dma_checkbox_panel
+    properties: {}
+    type: ColumnPanel
+  layout_properties: {slot: left-nav}
+  name: dma_checkbox_panel_copy
+  properties: {}
+  type: ColumnPanel
 container:
   properties: {html: '@theme:standard-page.html'}
   type: HtmlTemplate

@@ -9,8 +9,9 @@ db_schema:
     server: full
     title: temp_file_store
 dependencies: []
-name: Total Head Graphs
-package_name: Total_Head_Graphs
+metadata: {logo_img: null}
+name: Double Plot App
+package_name: Double_Plot_App
 renamed: true
 runtime_options:
   client_version: '3'
