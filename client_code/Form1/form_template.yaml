@@ -13,7 +13,30 @@ components:
   name: content_panel
   properties: {col_widths: '{}'}
   type: ColumnPanel
-- layout_properties: {slot: default}
+- components:
+  - name: outlined_card_1
+    properties: {role: outlined-card}
+    type: ColumnPanel
+  - layout_properties: {}
+    name: upload_label
+    properties: {text: Upload Your Excel File}
+    type: Label
+  - data_bindings: []
+    event_bindings: {change: file_loader_1_change}
+    layout_properties: {}
+    name: file_loader_1
+    properties: {file_types: .xlsx, role: tonal-button, text: Upload}
+    type: FileLoader
+  - event_bindings: {change: dma_dropdown_change}
+    layout_properties: {}
+    name: dma_dropdown
+    properties: {include_placeholder: true, placeholder: Select a DMA}
+    type: DropDown
+  - layout_properties: {}
+    name: plot_1
+    properties: {height: '600'}
+    type: Plot
+  layout_properties: {slot: default}
   name: linear_panel_1
   properties: {}
   type: LinearPanel

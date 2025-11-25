@@ -1,11 +1,20 @@
 allow_embedding: false
+db_schema:
+  temp_file_store:
+    client: none
+    columns:
+    - admin_ui: {order: 0, width: 200}
+      name: the_file
+      type: media
+    server: full
+    title: temp_file_store
 dependencies: []
 name: Total Head Graphs
 package_name: Total_Head_Graphs
 renamed: true
 runtime_options:
   client_version: '3'
-  server_spec: {base: python310-minimal}
+  server_spec: {base: python310-standard}
   server_version: python3-sandbox
   version: 2
 services:
